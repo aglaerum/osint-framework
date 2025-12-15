@@ -1,51 +1,41 @@
-# OSINT Framework
+# OSINT Framework - Mobile Responsive Fork
 
-http://osintframework.com
+**[🔗 Access the iPhone-friendly site here](https://aglaerum.github.io/osint-framework)**
 
-## Notes
-OSINT framework focused on gathering information from free tools or resources. The intention is to help people find free OSINT resources. Some of the sites included might require registration or offer more data for $$$, but you should be able to get at least a portion of the available information for no cost.
+A mobile-optimized version of the OSINT Framework, focused on providing a better experience on smartphones and tablets.
 
-I originally created this framework with an information security point of view. Since then, the response from other fields and disciplines has been incredible. I would love to be able to include any other OSINT resources, especially from fields outside of infosec. Please let me know about anything that might be missing!
+## What's Different
 
-Please visit the framework at the link below and good hunting!
+This fork adds mobile compatibility to the original OSINT Framework:
 
-https://osintframework.com
+- **Responsive design** - Adapts to any screen size
+- **iPhone 16 Pro optimized** - Works great on modern iOS devices
+- **Touch-friendly** - Larger tap targets and optimized interactions
+- **Auto-resize** - Handles orientation changes smoothly
+- **iOS safe areas** - Respects notches and Dynamic Island
 
-### Legend
-(T) - Indicates a link to a tool that must be installed and run locally  
-(D) - Google Dork, for more information: <a href="https://en.wikipedia.org/wiki/Google_hacking">Google Hacking</a>  
-(R) - Requires registration  
-(M) - Indicates a URL that contains the search term and the URL itself must be edited manually  
+The core functionality and OSINT resource collection remain unchanged.
 
-### For Update Notifications
-Follow me on Twitter: @jnordine - https://twitter.com/jnordine  
-Watch or star the project on Github: https://github.com/lockfale/osint-framework
+## Original Repository
 
-### Suggestions, Comments, Feedback
-Feedback or new tool suggestions are extremely welcome!  Please feel free to submit a pull request or open an issue on github or reach out on Twitter.
+This is a fork of the excellent [OSINT Framework by Justin Nordine (@jnordine)](https://github.com/lockfale/osint-framework).
 
-### Contribute with a GitHub Pull Request
-For new resources, please ensure that the site is available for public and free use.
-<ol start="1">
-  <li>Update the arf.json file in the format shown below. If this isn't the first entry for a folder, add a comma to the last closing brace of the previous entry.</li>
-</ol>
+All credit for the OSINT Framework concept, design, and resource curation goes to the original project. Please visit the official site at **https://osintframework.com** for the latest updates and to contribute new resources.
 
-```
-{
-  "name": "Example Name",
-  "type": "url",
-  "url": "http://example.com"
-}
+## Running Locally
+
+```bash
+npm install
+npm start
 ```
 
-<ol start="2">
-  <li>Submit pull request!</li>
-</ol>
+Then visit `http://localhost:8000`
 
-Thank you!
+## Legend
 
-## OSINT Framework Website
+- **(T)** - Tool that must be installed and run locally
+- **(D)** - Google Dork
+- **(R)** - Requires registration
+- **(M)** - URL must be edited manually with search terms
 
-https://osintframework.com
-
-Happy Hunting!
+Happy hunting!
