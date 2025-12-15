@@ -122,8 +122,12 @@ function update(source) {
 
   nodeEnter.append("svg:circle")
       .attr("r", 1e-6)
-      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
-      .style("stroke", function(d) { return getNodeColor(d); });
+      .style("fill", function(d) {
+        if (d._children) return "lightsteelblue";
+        return getNodeColor(d);
+      })
+      .style("stroke", "#fff")
+      .style("stroke-width", "2px");
 
   nodeEnter.append('a')
       .attr("target", "_blank")
@@ -133,7 +137,8 @@ function update(source) {
       .attr("dy", ".35em")
       .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
       .text(function(d) { return d.name; })
-      .style("fill: rgb(0, 0, 0)", function(d) { return d.free ? 'black' : '#999'; })
+      .style("fill", function(d) { return getNodeColor(d); })
+      .style("font-weight", "bold")
       .style("fill-opacity", 1e-6);
 
   nodeEnter.append("svg:title")
@@ -148,10 +153,15 @@ function update(source) {
 
   nodeUpdate.select("circle")
       .attr("r", dimensions.isMobile ? 8 : 6)
-      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
-      .style("stroke", function(d) { return getNodeColor(d); });
+      .style("fill", function(d) {
+        if (d._children) return "lightsteelblue";
+        return getNodeColor(d);
+      })
+      .style("stroke", "#fff")
+      .style("stroke-width", "2px");
 
   nodeUpdate.select("text")
+      .style("fill", function(d) { return getNodeColor(d); })
       .style("fill-opacity", 1);
 
   // Transition exiting nodes to the parent's new position.
