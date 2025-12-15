@@ -1,6 +1,27 @@
-var margin = [20, 120, 20, 140],
-    width = 1280 - margin[1] - margin[3],
-    height = 800 - margin[0] - margin[2],
+// Responsive dimensions based on viewport
+function getResponsiveDimensions() {
+    var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+    var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    var isMobile = viewportWidth < 768;
+
+    // Adjust margins for mobile
+    var marginTop = isMobile ? 10 : 20;
+    var marginRight = isMobile ? 60 : 120;
+    var marginBottom = isMobile ? 10 : 20;
+    var marginLeft = isMobile ? 80 : 140;
+
+    return {
+        margin: [marginTop, marginRight, marginBottom, marginLeft],
+        width: viewportWidth - marginRight - marginLeft,
+        height: Math.max(viewportHeight - 200, 400), // Ensure minimum height
+        isMobile: isMobile
+    };
+}
+
+var dimensions = getResponsiveDimensions();
+var margin = dimensions.margin,
+    width = dimensions.width,
+    height = dimensions.height,
     i = 0,
     duration = 1250,
     root;
@@ -14,6 +35,8 @@ var diagonal = d3.svg.diagonal()
 var vis = d3.select("#body").append("svg:svg")
     .attr("width", width + margin[1] + margin[3])
     .attr("height", height + margin[0] + margin[2])
+    .style("display", "block")
+    .style("margin", "0 auto")
   .append("svg:g")
     .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
@@ -46,8 +69,9 @@ function update(source) {
   // Compute the new tree layout.
   var nodes = tree.nodes(root).reverse();
 
-  // Normalize for fixed-depth.
-  nodes.forEach(function(d) { d.y = d.depth * 180; });
+  // Normalize for fixed-depth (responsive spacing for mobile).
+  var depthSpacing = dimensions.isMobile ? 120 : 180;
+  nodes.forEach(function(d) { d.y = d.depth * depthSpacing; });
 
   // Update the nodes…
   var node = vis.selectAll("g.node")
@@ -57,7 +81,12 @@ function update(source) {
   var nodeEnter = node.enter().append("svg:g")
       .attr("class", "node")
       .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-      .on("click", function(d) { toggle(d); update(d); });
+      .on("click", function(d) { toggle(d); update(d); })
+      .on("touchstart", function(d) {
+        d3.event.preventDefault();
+        toggle(d);
+        update(d);
+      });
 
   nodeEnter.append("svg:circle")
       .attr("r", 1e-6)
@@ -85,7 +114,7 @@ function update(source) {
       .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
   nodeUpdate.select("circle")
-      .attr("r", 6)
+      .attr("r", dimensions.isMobile ? 8 : 6)
       .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
 
   nodeUpdate.select("text")
@@ -149,8 +178,41 @@ function toggle(d) {
     d._children = null;
   }
 }
-//Togle Dark Mode
+//Toggle Dark Mode
 function goDark() {
   var element = document.body;
   element.classList.toggle("dark-Mode");
-} 
+}
+
+// Handle window resize for responsive behavior
+var resizeTimer;
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function() {
+    // Debounce resize events
+    var newDimensions = getResponsiveDimensions();
+
+    // Update dimensions
+    width = newDimensions.width;
+    height = newDimensions.height;
+    margin = newDimensions.margin;
+
+    // Update tree size
+    tree.size([height, width]);
+
+    // Update SVG size
+    d3.select("#body svg")
+      .attr("width", width + margin[1] + margin[3])
+      .attr("height", height + margin[0] + margin[2]);
+
+    // Update transform
+    vis.attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
+
+    // Re-render tree if root exists
+    if (root) {
+      root.x0 = height / 2;
+      root.y0 = 0;
+      update(root);
+    }
+  }, 250);
+});
