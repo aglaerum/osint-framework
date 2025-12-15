@@ -109,9 +109,25 @@ function update(source) {
         }
       });
 
+  // Helper function to get node color based on type
+  function getNodeColor(d) {
+    if (!d.name) return "steelblue";
+    var name = d.name;
+    if (name.includes("(T)")) return "#8B5CF6"; // Purple for tools
+    if (name.includes("(D)")) return "#10B981"; // Green for dorks
+    if (name.includes("(R)")) return "#F59E0B"; // Orange for registration
+    if (name.includes("(M)")) return "#EF4444"; // Red for manual
+    return "steelblue"; // Default blue
+  }
+
   nodeEnter.append("svg:circle")
       .attr("r", 1e-6)
-      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+      .style("fill", function(d) {
+        if (d._children) return "lightsteelblue";
+        return getNodeColor(d);
+      })
+      .style("stroke", "#fff")
+      .style("stroke-width", "2px");
 
   nodeEnter.append('a')
       .attr("target", "_blank")
@@ -121,7 +137,8 @@ function update(source) {
       .attr("dy", ".35em")
       .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
       .text(function(d) { return d.name; })
-      .style("fill: rgb(0, 0, 0)", function(d) { return d.free ? 'black' : '#999'; })
+      .style("fill", function(d) { return getNodeColor(d); })
+      .style("font-weight", "bold")
       .style("fill-opacity", 1e-6);
 
   nodeEnter.append("svg:title")
@@ -136,9 +153,15 @@ function update(source) {
 
   nodeUpdate.select("circle")
       .attr("r", dimensions.isMobile ? 8 : 6)
-      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+      .style("fill", function(d) {
+        if (d._children) return "lightsteelblue";
+        return getNodeColor(d);
+      })
+      .style("stroke", "#fff")
+      .style("stroke-width", "2px");
 
   nodeUpdate.select("text")
+      .style("fill", function(d) { return getNodeColor(d); })
       .style("fill-opacity", 1);
 
   // Transition exiting nodes to the parent's new position.
