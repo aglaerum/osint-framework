@@ -87,11 +87,26 @@ function update(source) {
   var nodeEnter = node.enter().append("svg:g")
       .attr("class", "node")
       .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-      .on("click", function(d) { toggle(d); update(d); })
+      .on("click", function(d) {
+        // If node has URL and no children, open URL in new tab
+        if (d.url && !d.children && !d._children) {
+          window.open(d.url, '_blank');
+        } else {
+          // Otherwise toggle expand/collapse
+          toggle(d);
+          update(d);
+        }
+      })
       .on("touchstart", function(d) {
         d3.event.preventDefault();
-        toggle(d);
-        update(d);
+        // If node has URL and no children, open URL in new tab
+        if (d.url && !d.children && !d._children) {
+          window.open(d.url, '_blank');
+        } else {
+          // Otherwise toggle expand/collapse
+          toggle(d);
+          update(d);
+        }
       });
 
   nodeEnter.append("svg:circle")
