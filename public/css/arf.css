@@ -2,11 +2,16 @@ body {
   background-color: #ffffff;
   font-size: 14px;
   font-family: "Helvetica Neue", Helvetica;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 #body {
   margin: 0 auto;
   position: relative;
+  width: 100%;
+  overflow-x: auto;
 }
 
 #header {
@@ -14,6 +19,15 @@ body {
   font-weight: bold;
   top: 20px;
   text-align: center;
+  padding: 10px;
+}
+
+/* Mobile responsive header */
+@media (max-width: 768px) {
+  #header {
+    font-size: 24px;
+    padding: 5px;
+  }
 }
 
 .dark-Mode{
@@ -37,10 +51,37 @@ body {
   width: 330px;
   font-size: 11px;
   color: #000;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Mobile responsive legend */
+@media (max-width: 768px) {
+  .legend {
+    position: relative;
+    width: 100%;
+    font-size: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .legend button {
+    font-size: 14px;
+    padding: 10px 15px;
+    margin: 5px 0;
+    min-height: 44px; /* iOS touch target minimum */
+    cursor: pointer;
+  }
+
+  .legend p {
+    margin: 5px 0;
+    line-height: 1.4;
+  }
 }
 
 .node {
   cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
 }
 
 .node circle {
@@ -53,10 +94,108 @@ body {
 .node text {
   font-size: 12px;
   fill: rgb(0, 0, 0);
+  pointer-events: none; /* Improve touch interactions */
 }
 
 path.link {
   fill: none;
   stroke: #ccc;
   stroke-width: 1px;
+}
+
+/* Mobile responsive nodes and text */
+@media (max-width: 768px) {
+  .node circle {
+    r: 8; /* Larger tap targets */
+    stroke-width: 2px;
+  }
+
+  .node text {
+    font-size: 11px;
+  }
+
+  path.link {
+    stroke-width: 1.5px;
+  }
+
+  /* Improve text readability on mobile */
+  body {
+    font-size: 12px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  h3 {
+    font-size: 16px;
+    margin: 10px;
+  }
+
+  p {
+    margin: 10px;
+    line-height: 1.5;
+  }
+
+  a {
+    color: #0066cc;
+    text-decoration: underline;
+  }
+}
+
+/* Improve scrolling on iOS */
+#body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Better touch targets for links in SVG */
+svg a {
+  cursor: pointer;
+}
+
+/* iPhone 16 Pro and modern iOS device support */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Optimize for iPhone 16 Pro screen size (393x852) */
+@media only screen
+  and (min-device-width: 375px)
+  and (max-device-width: 430px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+
+  body {
+    font-size: 13px;
+  }
+
+  #header {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .legend {
+    font-size: 11px;
+  }
+
+  .node text {
+    font-size: 10px;
+  }
+}
+
+/* Dark mode improvements for mobile */
+.dark-Mode {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .dark-Mode h3,
+  .dark-Mode p,
+  .dark-Mode a {
+    color: #fff;
+  }
+
+  .dark-Mode a {
+    color: #66b3ff;
+  }
 }
