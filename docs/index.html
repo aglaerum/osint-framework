@@ -8,7 +8,7 @@
     <title>OSINT Framework</title>
   </head>
 
-  <body>
+  <body class="dark-Mode">
     <div id="body">
       <div id="header">
         OSINT Framework
@@ -22,6 +22,29 @@
           <span class="legend-item"><span class="color-dot color-registration"></span><strong>(R)</strong> Registration required</span>
           <span class="legend-item"><span class="color-dot color-manual"></span><strong>(M)</strong> Manual URL edit</span>
         </p>
+        <div class="filter-section">
+          <p style="font-weight: bold; margin: 10px 0 5px 0;">Filter by type:</p>
+          <label class="filter-checkbox">
+            <input type="checkbox" id="filter-tool" value="T" checked onchange="applyFilters()">
+            <span class="color-dot color-tool"></span> Tools (T)
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" id="filter-dork" value="D" checked onchange="applyFilters()">
+            <span class="color-dot color-dork"></span> Dorks (D)
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" id="filter-registration" value="R" checked onchange="applyFilters()">
+            <span class="color-dot color-registration"></span> Registration (R)
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" id="filter-manual" value="M" checked onchange="applyFilters()">
+            <span class="color-dot color-manual"></span> Manual (M)
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" id="filter-none" value="NONE" checked onchange="applyFilters()">
+            No tag
+          </label>
+        </div>
         <button onclick="goDark()" aria-label="Toggle dark mode">Toggle dark mode</button>
         <p style="margin-top: 10px; font-size: 10px;">Based on <a href="https://github.com/lockfale/osint-framework" target="_blank">OSINT Framework</a> by Justin Nordine</p>
       </div>

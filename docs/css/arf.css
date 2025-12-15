@@ -70,6 +70,29 @@ body {
   margin-bottom: 5px;
 }
 
+.filter-section {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+}
+
+.dark-Mode .filter-section {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.filter-checkbox {
+  display: block;
+  margin: 5px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  margin-right: 5px;
+  cursor: pointer;
+}
+
 .color-dot {
   display: inline-block;
   width: 10px;
@@ -134,7 +157,8 @@ body {
 .node text {
   font-size: 12px;
   fill: rgb(0, 0, 0);
-  pointer-events: none; /* Improve touch interactions */
+  pointer-events: auto; /* Allow text to be clickable */
+  cursor: pointer;
 }
 
 path.link {
