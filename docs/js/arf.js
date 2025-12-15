@@ -109,9 +109,21 @@ function update(source) {
         }
       });
 
+  // Helper function to get node color based on type
+  function getNodeColor(d) {
+    if (!d.name) return "steelblue";
+    var name = d.name;
+    if (name.includes("(T)")) return "#8B5CF6"; // Purple for tools
+    if (name.includes("(D)")) return "#10B981"; // Green for dorks
+    if (name.includes("(R)")) return "#F59E0B"; // Orange for registration
+    if (name.includes("(M)")) return "#EF4444"; // Red for manual
+    return "steelblue"; // Default blue
+  }
+
   nodeEnter.append("svg:circle")
       .attr("r", 1e-6)
-      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
+      .style("stroke", function(d) { return getNodeColor(d); });
 
   nodeEnter.append('a')
       .attr("target", "_blank")
@@ -136,7 +148,8 @@ function update(source) {
 
   nodeUpdate.select("circle")
       .attr("r", dimensions.isMobile ? 8 : 6)
-      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
+      .style("stroke", function(d) { return getNodeColor(d); });
 
   nodeUpdate.select("text")
       .style("fill-opacity", 1);

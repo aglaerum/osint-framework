@@ -64,6 +64,37 @@ body {
   max-width: 100%;
 }
 
+.legend-item {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.color-tool {
+  background-color: #8B5CF6;
+}
+
+.color-dork {
+  background-color: #10B981;
+}
+
+.color-registration {
+  background-color: #F59E0B;
+}
+
+.color-manual {
+  background-color: #EF4444;
+}
+
 /* Mobile responsive legend */
 @media (max-width: 768px) {
   .legend {
