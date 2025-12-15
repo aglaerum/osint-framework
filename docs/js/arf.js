@@ -86,28 +86,7 @@ function update(source) {
   // Enter any new nodes at the parent's previous position.
   var nodeEnter = node.enter().append("svg:g")
       .attr("class", "node")
-      .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-      .on("click", function(d) {
-        // If node has URL and no children, open URL in new tab
-        if (d.url && !d.children && !d._children) {
-          window.open(d.url, '_blank');
-        } else {
-          // Otherwise toggle expand/collapse
-          toggle(d);
-          update(d);
-        }
-      })
-      .on("touchstart", function(d) {
-        d3.event.preventDefault();
-        // If node has URL and no children, open URL in new tab
-        if (d.url && !d.children && !d._children) {
-          window.open(d.url, '_blank');
-        } else {
-          // Otherwise toggle expand/collapse
-          toggle(d);
-          update(d);
-        }
-      });
+      .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; });
 
   // Helper function to get node color based on type
   function getNodeColor(d) {
@@ -127,11 +106,38 @@ function update(source) {
         return getNodeColor(d);
       })
       .style("stroke", "#fff")
-      .style("stroke-width", "2px");
+      .style("stroke-width", "2px")
+      .on("click", function(d) {
+        d3.event.stopPropagation();
+        // If node has URL and no children, open URL in new tab
+        if (d.url && !d.children && !d._children) {
+          window.open(d.url, '_blank');
+        } else {
+          // Otherwise toggle expand/collapse
+          toggle(d);
+          update(d);
+        }
+      })
+      .on("touchstart", function(d) {
+        d3.event.preventDefault();
+        d3.event.stopPropagation();
+        // If node has URL and no children, open URL in new tab
+        if (d.url && !d.children && !d._children) {
+          window.open(d.url, '_blank');
+        } else {
+          // Otherwise toggle expand/collapse
+          toggle(d);
+          update(d);
+        }
+      });
 
-  nodeEnter.append('a')
+  // Add text with proper link handling
+  var textElement = nodeEnter.append('a')
       .attr("target", "_blank")
-      .attr('xlink:href', function(d) { return d.url; })
+      .attr('xlink:href', function(d) {
+        // Only set href for end nodes with URLs
+        return (d.url && !d.children && !d._children) ? d.url : null;
+      })
       .append("svg:text")
       .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
       .attr("dy", ".35em")
@@ -140,6 +146,18 @@ function update(source) {
       .style("fill", function(d) { return getNodeColor(d); })
       .style("font-weight", "bold")
       .style("fill-opacity", 1e-6);
+
+  // Add click handler for non-end nodes to toggle
+  textElement.on("click", function(d) {
+    // If this is not an end node, toggle it
+    if (d.children || d._children) {
+      d3.event.preventDefault();
+      d3.event.stopPropagation();
+      toggle(d);
+      update(d);
+    }
+    // For end nodes with URLs, the link will work naturally
+  });
 
   nodeEnter.append("svg:title")
     .text(function(d) {
@@ -260,3 +278,45 @@ window.addEventListener('resize', function() {
     }
   }, 250);
 });
+
+// Get node category based on name
+function getNodeCategory(d) {
+  if (!d.name) return "NONE";
+  var name = d.name;
+  if (name.includes("(T)")) return "T";
+  if (name.includes("(D)")) return "D";
+  if (name.includes("(R)")) return "R";
+  if (name.includes("(M)")) return "M";
+  return "NONE";
+}
+
+// Apply filters based on selected checkboxes
+function applyFilters() {
+  // Get selected filters
+  var selectedFilters = [];
+  if (document.getElementById("filter-tool").checked) selectedFilters.push("T");
+  if (document.getElementById("filter-dork").checked) selectedFilters.push("D");
+  if (document.getElementById("filter-registration").checked) selectedFilters.push("R");
+  if (document.getElementById("filter-manual").checked) selectedFilters.push("M");
+  if (document.getElementById("filter-none").checked) selectedFilters.push("NONE");
+
+  // Apply filters to all nodes
+  vis.selectAll("g.node").each(function(d) {
+    var category = getNodeCategory(d);
+    var shouldShow = selectedFilters.indexOf(category) !== -1;
+
+    // Show or hide the node
+    d3.select(this).style("display", shouldShow ? "inline" : "none");
+  });
+
+  // Apply filters to links
+  vis.selectAll("path.link").each(function(d) {
+    var sourceCategory = getNodeCategory(d.source);
+    var targetCategory = getNodeCategory(d.target);
+    var shouldShow = (selectedFilters.indexOf(sourceCategory) !== -1) &&
+                     (selectedFilters.indexOf(targetCategory) !== -1);
+
+    // Show or hide the link
+    d3.select(this).style("display", shouldShow ? "inline" : "none");
+  });
+}
